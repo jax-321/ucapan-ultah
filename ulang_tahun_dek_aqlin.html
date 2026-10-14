@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Ulang Tahun Dek Aqlin!</title>
+    <!-- Menggunakan Tailwind CSS untuk styling yang responsif dan cepat -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Menggunakan Google Fonts untuk teks yang lebih ceria -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Library Canvas Confetti untuk efek ledakan kertas warna-warni -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .bounce-slow {
+            animation: bounce-slow 2s infinite;
+        }
+
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .hidden-screen {
+            display: none;
+        }
+        
+        /* Floating balloons background */
+        .balloon {
+            position: absolute;
+            bottom: -50px;
+            font-size: 3rem;
+            animation: floatUp linear infinite;
+            opacity: 0.7;
+            z-index: 0;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(-5deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-120vh) rotate(5deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="relative flex items-center justify-center p-4">
+
+    <div id="balloons-container" class="absolute inset-0 overflow-hidden pointer-events-none">
+        <!-- Balon akan di-generate via JavaScript -->
+    </div>
+
+    <div id="main-screen" class="z-10 flex flex-col items-center justify-center text-center max-w-md bg-white/60 backdrop-blur-sm p-8 rounded-3xl shadow-xl border border-white/50">
+        <h1 class="text-4xl sm:text-5xl font-bold text-pink-500 mb-4 drop-shadow-md">
+            Halo Dek Aqlin! 👋
+        </h1>
+        <p class="text-lg sm:text-xl text-gray-700 mb-8 font-semibold">
+            Ada kejutan spesial nih buat kamu...
+        </p>
+        
+        <div class="text-8xl mb-8 bounce-slow cursor-pointer" onclick="bukaKado()" id="kado">
+            🎁
+        </div>
+
+        <button onclick="bukaKado()" class="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 px-8 rounded-full text-xl shadow-lg transform transition hover:scale-105 active:scale-95">
+            Klik Buka Kado!
+        </button>
+    </div>
+
+    <div id="message-screen" class="hidden-screen z-10 flex flex-col items-center justify-center text-center max-w-lg bg-white/80 backdrop-blur-md p-6 sm:p-10 rounded-3xl shadow-2xl border border-white/50">
+        <div class="text-7xl sm:text-8xl mb-4 bounce-slow">
+            🎂
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600 mb-6 leading-tight">
+            Selamat Ulang Tahun<br>Dek Aqlin! 🎉
+        </h1>
+        
+        <div class="bg-pink-50 p-6 rounded-2xl border-2 border-pink-200 mb-6 text-gray-800 text-lg sm:text-xl leading-relaxed">
+            <p>Semoga panjang umur, sehat selalu, jadi anak yang pintar, sholeh, berbakti kepada orang tua, dan semua cita-citanya tercapai.</p>
+            <p class="mt-2 font-bold text-pink-500">Bahagia selalu ya, Dek Aqlin! 🥳💖</p>
+        </div>
+
+        <button onclick="mainkanLagi()" class="text-pink-500 font-semibold underline hover:text-pink-700">
+            Lihat Kejutan Lagi
+        </button>
+    </div>
+
+    <script>
+        // Fungsi untuk membuat balon terbang di latar belakang
+        function createBalloons() {
+            const container = document.getElementById('balloons-container');
+            const emojis = ['🎈', '✨', '🎉', '🌟'];
+            
+            for (let i = 0; i < 15; i++) {
+                let balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                balloon.style.left = Math.random() * 100 + 'vw';
+                balloon.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                balloon.style.animationDelay = (Math.random() * 5) + 's';
+                container.appendChild(balloon);
+            }
+        }
+
+        // Panggil saat halaman dimuat
+        window.onload = createBalloons;
+
+        // Fungsi saat tombol "Buka Kado" diklik
+        function bukaKado() {
+            // Sembunyikan layar utama, tampilkan pesan
+            document.getElementById('main-screen').style.display = 'none';
+            const msgScreen = document.getElementById('message-screen');
+            msgScreen.style.display = 'flex';
+            msgScreen.classList.add('fade-in');
+
+            // Jalankan efek ledakan confetti
+            let duration = 3 * 1000;
+            let animationEnd = Date.now() + duration;
+            let defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            let interval = setInterval(function() {
+                let timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                let particleCount = 50 * (timeLeft / duration);
+                // Confetti dari dua sisi
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+            
+            // Ledakan tengah awal
+            confetti({
+                particleCount: 150,
+                spread: 100,
+                origin: { y: 0.6 }
+            });
+        }
+
+        // Fungsi untuk mengulang dari awal
+        function mainkanLagi() {
+            document.getElementById('message-screen').style.display = 'none';
+            document.getElementById('message-screen').classList.remove('fade-in');
+            document.getElementById('main-screen').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
